@@ -1,312 +1,437 @@
-CREATE DATABASE mayorista_fiambre_lacteo_DB
+CREATE DATABASE mayorista_fiambres_lacteos_DB
+
 GO
-USE mayorista_fiambre_lacteo_DB
+USE mayorista_fiambres_lacteos_DB
+
 GO
- CREATE TABLE marcas (
- id_marca int identity (1,1),
- nombre varchar (50) NOT NULL,
- descripcion varchar (100),
- CONSTRAINT PK_marca PRIMARY KEY (id_marca)
+
+--Tabla zonas_envio
+CREATE TABLE zonas_envio (
+  id_zona_envio int,
+  descripcion VARCHAR(50),
+  recargo_zona DECIMAL(10,2)
+  CONSTRAINT pk_zona_envio PRIMARY KEY (id_zona_envio)
+)
+
+
+-- Tabla estados_pedido
+CREATE TABLE estados_pedido (
+    id_estado_perdido int NOT NULL,
+    estado varchar(50) NULL,
+    CONSTRAINT PK_estados_pedido PRIMARY KEY (id_estado_perdido)
 )
 
 GO
-create table medios_pagos (
-id_medio_pago int,
-nombre varchar (50) NOT NULL,
-recargo decimal (10, 2),
-constraint pk_medio_pago_id primary key (id_medio_pago)
-);
 
- GO
- CREATE TABLE Direcciones_Entregas
-(
-	id_dir_entrega INT IDENTITY (1,1) NOT NULL,
-	direccion varchar (50) NOT NULL,
-	referencia varchar (50),
-	CONSTRAINT pk_dir_entrega PRIMARY KEY (id_dir_entrega)
-)
-GO
-create table provincias(
-id_provincia int identity (1,1),
-provincia varchar (100) NOT NULL,
-constraint fk_id_provincia primary key (id_provincia)
+-- Tabla marcas
+CREATE TABLE marcas (
+    id_marca int IDENTITY(1,1),
+    nombre varchar(50) NOT NULL,
+    descripcion varchar(100),
+    CONSTRAINT PK_marca PRIMARY KEY (id_marca)
 )
 
 GO
- CREATE TABLE tipos_productos (
- id_tipo_producto int identity (1,1),
-  nombre varchar (50) NOT NULL,
-  descripcion varchar (100)
- CONSTRAINT PK_tipo_producto PRIMARY KEY (id_tipo_producto)
+
+-- Tabla medios_pagos
+CREATE TABLE medios_pagos (
+    id_medio_pago int,
+    nombre varchar(50) NOT NULL,
+    recargo decimal(10,2),
+    CONSTRAINT pk_medio_pago_id PRIMARY KEY (id_medio_pago)
 )
+
 GO
 
- CREATE TABLE categorias (
- id_categoria int identity (1,1),
- nombre varchar (50) NOT NULL,
- descripcion varchar (100),
- CONSTRAINT PK_categoria PRIMARY KEY (id_categoria)
- )
- GO
- CREATE TABLE Tipos_Contactos
-(
-	id_tipo_contacto INT IDENTITY (1,1) NOT NULL,
-	tipo varchar(50) NOT NULL,
-	CONSTRAINT pk_tipo_cont PRIMARY KEY (id_tipo_contacto)
+-- Tabla provincias
+CREATE TABLE provincias (
+    id_provincia int IDENTITY(1,1),
+    provincia varchar(100) NOT NULL,
+    CONSTRAINT fk_id_provincia PRIMARY KEY (id_provincia)
 )
+
 GO
 
+-- Tabla tipos_productos
+CREATE TABLE tipos_productos (
+    id_tipo_producto int IDENTITY(1,1),
+    nombre varchar(50) NOT NULL,
+    descripcion varchar(100),
+    CONSTRAINT PK_tipo_producto PRIMARY KEY (id_tipo_producto)
+)
+
+GO
+
+-- Tabla categorias
+CREATE TABLE categorias (
+    id_categoria int IDENTITY(1,1),
+    nombre varchar(50) NOT NULL,
+    descripcion varchar(100),
+    CONSTRAINT PK_categoria PRIMARY KEY (id_categoria)
+)
+
+GO
+
+-- Tabla Tipos_Contactos
+CREATE TABLE Tipos_Contactos (
+    id_tipo_contacto INT IDENTITY(1,1) NOT NULL,
+    tipo varchar(50) NOT NULL,
+    CONSTRAINT pk_tipo_cont PRIMARY KEY (id_tipo_contacto)
+)
+
+GO
+
+-- Tabla cargos
 CREATE TABLE cargos (
-id_cargo INT IDENTITY(1,1),
-cargo VARCHAR(50) NOT NULL
-
-CONSTRAINT pk_cargo PRIMARY KEY (id_cargo)
+    id_cargo INT IDENTITY(1,1),
+    cargo VARCHAR(50) NOT NULL,
+    CONSTRAINT pk_cargo PRIMARY KEY (id_cargo)
 )
+
 GO
+
+-- Tabla canales_compras
 CREATE TABLE canales_compras (
-id_canal_compra INT,
-descripcion VARCHAR(50) NOT NULL
+    id_canal_compra INT,
+    descripcion VARCHAR(50) NOT NULL,
+    CONSTRAINT pk_canal_compra PRIMARY KEY (id_canal_compra)
+)
 
-CONSTRAINT pk_canal_compra PRIMARY KEY (id_canal_compra)
-)
-GO
-CREATE TABLE Clientes 
-(
-	id_cliente INT IDENTITY (1,1 ) NOT NULL,
-	nombre_completo varchar (50) NOT NULL,
-	CONSTRAINT pk_cliente PRIMARY KEY (id_cliente)
-)
-GO
-CREATE TABLE Contactos
-(
-	id_contacto INT IDENTITY (1,1) NOT NULL,
-	contacto varchar(100) NOT NULL,
-	tipo_contacto_id int NOT NULL,
-	cliente_id int,
-	CONSTRAINT pk_contacto PRIMARY KEY (id_contacto),
-	CONSTRAINT fk_tipo_cont FOREIGN KEY (tipo_contacto_id) REFERENCES Tipos_contactos (id_tipo_contacto),
-	CONSTRAINT fk_cliente_contacto FOREIGN KEY (cliente_id) REFERENCES Clientes (id_cliente)
-)
 GO
 
-create table ciudades(
-id_ciudad int identity (1,1),
-ciudad varchar(100) NOT NULL,
-provincia_id int NOT NULL,
-constraint pk_id_ciudad primary key (id_ciudad),
-constraint fk_provincia_ciudad foreign key (provincia_id)
-    references provincias (id_provincia)
+-- Tabla Clientes
+CREATE TABLE Clientes (
+    id_cliente INT IDENTITY(1,1) NOT NULL,
+    nombre_completo varchar(50) NOT NULL,
+    CONSTRAINT pk_cliente PRIMARY KEY (id_cliente)
 )
-GO
-create table barrios(
-id_barrio int identity (1,1),
-barrio varchar (150) NOT NULL,
-ciudad_id int NOT NULL,
-constraint pk_id_barrio primary key (id_barrio),
-constraint fk_id_ciudad_barrio foreign key (ciudad_id)
-    references ciudades (id_ciudad)
-)
-GO
-create table sucursales(
-id_sucursal int,
-nombre varchar (50) NOT NULL,
-direccion varchar (50) NOT NULL,
-telefono int NOT NULL,
-barrio_id int NOT NULL,
-constraint pk_sucursal primary key (id_sucursal),
-constraint fk_barrio_sucursal foreign key (barrio_id)
-    references barrios (id_barrio)
-)
-GO
-create table tipos_movimientos(
-id_mov_tipo int identity(1,1),
-tipo_mov varchar(50) NOT NULL,
-constraint pk_tipo_mov primary key(id_mov_tipo)
-)
-GO
-CREATE TABLE productos(
-	id_producto int identity (1,1),
-	nombre varchar (50) NOT NULL,
-	descripcion varchar(100),
-	limite_minimo int NOT NULL,
-	tipo_producto_id int NOT NULL,
-	marca_id int NOT NULL,
-	categoria_id int NOT NULL,
-	peso_kg decimal (18,2)
- CONSTRAINT PK_producto PRIMARY KEY  (id_producto),
- CONSTRAINT FK_marca_producto FOREIGN KEY (marca_id) 
-	REFERENCES marcas (id_marca),
-CONSTRAINT FK_tipo_producto FOREIGN KEY (tipo_producto_id)
-	REFERENCES tipos_productos (id_tipo_producto), 
-CONSTRAINT FK_categoria_producto FOREIGN KEY (categoria_id)
-	REFERENCES categorias (id_categoria)
- )
- GO
- create table inventarios(
-id_inventario int,
-sucursal_id int NOT NULL,
-producto_id int NOT NULL,
-cantidad int NOT NULL,
-tipo_movimiento_id int NOT NULL,
-motivo varchar(70),
-fecha datetime NOT NULL,
-sucursal_destino_id int
-constraint pk_inventario primary key (id_inventario),
-constraint fk_sucursal_inventario foreign key(sucursal_id) references sucursales (id_sucursal),
-CONSTRAINT FK_producto_inventario FOREIGN KEY (producto_id) REFERENCES productos (id_producto),
-constraint fk_movimiento_inventario foreign key (tipo_movimiento_id) references tipos_movimientos(id_mov_tipo),
-)
-GO
-create table tipos_vehiculos (
-id_tipo_vehiculo int ,
-vehiculo varchar(50) NOT NULL
---camiones, furgonetas, furgones
-constraint pk_vehiculo primary key (id_tipo_vehiculo)
-)
+
 GO
 
-create table caract_transportes(
-id_carac_trans int,
-capacidad_carga decimal(10,2) NOT NULL,
-refrigeracion bit NOT NULL,
-tipo_vehiculo_id int NOT NULL
+-- Tabla tipos_movimientos
+CREATE TABLE tipos_movimientos (
+    id_mov_tipo int IDENTITY(1,1),
+    tipo_mov varchar(50) NOT NULL,
+    CONSTRAINT pk_tipo_mov PRIMARY KEY (id_mov_tipo)
+)
 
-constraint pk_carac_trans primary key (id_carac_trans),
-constraint fk_tipo_vehiculo foreign key (tipo_vehiculo_id) references tipos_vehiculos (id_tipo_vehiculo)
-)
-GO
-create table transportes_terceros(
-id_transporte_tercero int,
-empresa varchar(50) NOT NULL,
-contacto varchar(50) NOT NULL,
-carac_trans_id int NOT NULL
-constraint pk_transporte_terceros primary key (id_transporte_tercero),
-constraint fk_carac_trans_terceros foreign key (carac_trans_id) references caract_transportes (id_carac_trans)
-)
-GO
-create table transportes(
-id_transportes int,
-disponibilidad varchar(2) NOT NULL,
-carac_trans_id int NOT NULL
-constraint pk_transportes primary key(id_transportes),
-constraint fk_carac_trans_transporte foreign key (carac_trans_id) references caract_transportes (id_carac_trans)
-)
 GO
 
-CREATE TABLE empleados (
-id_empleado INT,
-sucursal_id INT NOT NULL,
-cargo_id INT NOT NULL,
-nombre_completo VARCHAR(90) NOT NULL,
-direccion VARCHAR(50) NOT NULL,
-mail VARCHAR(50) NOT NULL,
-num_tel VARCHAR(50) NOT NULL,
-supervisor_id INT
-
-CONSTRAINT pk_id_empleado PRIMARY KEY (id_empleado),
-CONSTRAINT FK_empleados_supervisor FOREIGN KEY (supervisor_id) 
-    REFERENCES empleados (id_empleado),
-CONSTRAINT fk_sucursal_empleados FOREIGN KEY (sucursal_id)
-	REFERENCES sucursales (id_sucursal),
-CONSTRAINT fk_cargo_empleados FOREIGN KEY (cargo_id)
-	REFERENCES cargos (id_cargo)
+-- Tabla tipos_vehiculos
+CREATE TABLE tipos_vehiculos (
+    id_tipo_vehiculo int,
+    tipo varchar(50) NOT NULL,
+    CONSTRAINT pk_vehiculo PRIMARY KEY (id_tipo_vehiculo)
 )
-GO
-CREATE TABLE pedidos(
-id_pedido INT,
-cliente_id INT NOT NULL,
-direccion_entrega_id INT NOT NULL,
-empleado_armado_id INT NOT NULL,
-fecha DATE NOT NULL,
-estado CHAR(1) NOT NULL,
-canal_compra_id INT NOT NULL,
 
-CONSTRAINT pk_pedido PRIMARY KEY (id_pedido),
-CONSTRAINT fk_cliente_pedidos FOREIGN KEY (cliente_id)
-	REFERENCES clientes (id_cliente),
-CONSTRAINT fk_empleado_armado_pedidos FOREIGN KEY (empleado_armado_id)
-	REFERENCES empleados (id_empleado),
-CONSTRAINT fk_canal_compra_pedidos FOREIGN KEY (canal_compra_id)
-	REFERENCES canales_compras (id_canal_compra),
-CONSTRAINT fk_direccion_entrega_pedido FOREIGN KEY (direccion_entrega_id)	
-	REFERENCES Direcciones_Entregas (id_dir_entrega)
-)
 GO
+
+CREATE TABLE flotas (
+  id_flota int,
+  tipo_flota VARCHAR(50) NOT NULL, --INTERTA / EXTERNA
+  nombre_flota VARCHAR(100),
+  recargo DECIMAL(10,2) NOT NULL
+
+  CONSTRAINT pk_flota PRIMARY KEY (id_flota)
+)
+
+GO
+
+CREATE TABLE transportes (
+  id_transporte int,
+  flota_id int,
+  nombre_transportista VARCHAR(100),
+  cuit VARCHAR(15),
+  telefono VARCHAR(20)
+
+  CONSTRAINT pk_transporte PRIMARY KEY (id_transporte),
+  CONSTRAINT FK_flota_transporte FOREIGN KEY (flota_id) REFERENCES flotas (id_flota)
+)
+
+GO
+
+-- Tabla Direcciones_Entregas
+CREATE TABLE Direcciones_Entregas (
+    id_dir_entrega INT IDENTITY(1,1) NOT NULL,
+    direccion varchar(50) NOT NULL,
+    referencia varchar(50),
+    cliente_id INT NULL,
+	zona_envio_id INT 
+
+    CONSTRAINT pk_dir_entrega PRIMARY KEY (id_dir_entrega)
+	CONSTRAINT fk_zona_envio_dir_entr FOREIGN KEY (zona_envio_id) REFERENCES zonas_envio (id_zona_envio)
+)
+
+GO
+
+-- Tabla ciudades
+CREATE TABLE ciudades (
+    id_ciudad int IDENTITY(1,1),
+    ciudad varchar(100) NOT NULL,
+    provincia_id int NOT NULL,
+    CONSTRAINT pk_id_ciudad PRIMARY KEY (id_ciudad),
+    CONSTRAINT fk_provincia_ciudad FOREIGN KEY (provincia_id) REFERENCES provincias (id_provincia)
+)
+
+GO
+
+-- Tabla barrios
+CREATE TABLE barrios (
+    id_barrio int IDENTITY(1,1),
+    barrio varchar(150) NOT NULL,
+    ciudad_id int NOT NULL,
+    CONSTRAINT pk_id_barrio PRIMARY KEY (id_barrio),
+    CONSTRAINT fk_id_ciudad_barrio FOREIGN KEY (ciudad_id) REFERENCES ciudades (id_ciudad)
+)
+
+GO
+
+-- Tabla sucursales
+CREATE TABLE sucursales (
+    id_sucursal int,
+    nombre varchar(50) NOT NULL,
+    direccion varchar(50) NOT NULL,
+    telefono varchar(50) NOT NULL,
+    barrio_id int NOT NULL,
+    CONSTRAINT pk_sucursal PRIMARY KEY (id_sucursal),
+    CONSTRAINT fk_barrio_sucursal FOREIGN KEY (barrio_id) REFERENCES barrios (id_barrio)
+)
+
+GO
+
+CREATE TABLE vehiculos (
+  id_vehiculo int,
+  patente VARCHAR(10) NOT NULL,
+  capacidad_kg DECIMAL(10,2),
+  tipo_vehiculo_id int,
+  transporte_id int,
+
+  CONSTRAINT pk_id_vehiculo PRIMARY KEY (id_vehiculo),
+  CONSTRAINT FK_transporte_vehiculo FOREIGN KEY (transporte_id) REFERENCES transportes (id_transporte),
+  CONSTRAINT FK_tipo_vehiculo_vehiculo FOREIGN KEY (tipo_vehiculo_id) REFERENCES tipos_vehiculos (id_tipo_vehiculo)
+)
+
+GO
+
+-- Tabla depositos
 CREATE TABLE depositos (
-id_deposito INT,
-cliente_id INT NOT NULL,
-direccion VARCHAR(50) NOT NULL,
-capacidad DECIMAL(8,2) NOT NULL
-
-CONSTRAINT pk_deposito PRIMARY KEY (id_deposito),
-CONSTRAINT fk_cliente_deposito FOREIGN KEY (cliente_id)
-	REFERENCES clientes (id_cliente)
-)
-GO
-create table Facturas (
-id_factura int not null,
-pedido_id int not null,
-sucursal_id int NOT NULL,
-empleado_factura_id int NOT NULL,
-transporte_id int,
-transporte_terceros_id int,
-fecha date NOT NULL,
-total decimal (10, 2) NOT NULL,
-constraint pk_id_factura primary key (id_factura),--PK facturas
-constraint fk_pedido_id foreign key (pedido_id) --FK Pedido
-	references pedidos (id_pedido), --referencia a tabla pedido
-constraint fk_sucursal_id foreign key (sucursal_id) --FK sucursal
-	references sucursales (id_sucursal), --referencia tabla sucursales
-constraint fk_empleado_factura_id foreign key (empleado_factura_id)--FK empleado factura
-	references empleados (id_empleado), --referenc9ia tabla empleados
-constraint fk_transporte_id foreign key (transporte_id)--FK transporte
-	references transportes (id_transportes), --referencia a tabla transportes
-constraint fk_trans_terc foreign key (transporte_terceros_id) --FK transportes terceros
-	references transportes_terceros (id_transporte_tercero)
-);
-
-create table Facturas_medios_pago (
-id_factura_medio_pago int,
-monto decimal (10, 2) NOT NULL,
-medio_pago_id int NOT NULL,
-factura_id int
-constraint pk_factura_medio_pago primary key (id_factura_medio_pago),
-constraint fk_factura_id foreign key (factura_id) 
-	references facturas (id_factura),
-constraint fk_medio_pago_id foreign key (medio_pago_id)
-	references medios_pagos (id_medio_pago)
-);
-
-GO
-create table detalles_facturas (
-id_det_fact int,
-factura_id int NOT NULL,
-producto_id int NOT NULL,
-cantidad int NOT NULL,
-prec_uni decimal (10, 2) NOT NULL,
-peso_total_kg decimal(15, 2)
-constraint pk_det_factura primary key (id_det_fact),
-constraint fk_factura_det_fac foreign key (factura_id) 
-	references facturas (id_factura),
-constraint fk_producto_det_fac foreign key (producto_id) 
-	references productos (id_producto)
-	)
-GO
-create table detalle_pedidos(
-id_det_pedido int,
-producto_id int NOT NULL,
-cantidad int NOT NULL,
-prec_uni decimal (10, 2) NOT NULL,
-pedido_id int NOT NULL,
-peso_total_kg decimal(15, 2)
-constraint pk_det_pedido primary key (id_det_pedido),
-constraint fk_prod_det_ped foreign key (producto_id)
-	references productos (id_producto),
-constraint fk_pedido_det_ped foreign key (pedido_id)
-	references pedidos (id_pedido)
+    id_deposito INT,
+    cliente_id INT NOT NULL,
+    direccion VARCHAR(50) NOT NULL,
+    capacidad DECIMAL(8,2) NOT NULL,
+    CONSTRAINT pk_deposito PRIMARY KEY (id_deposito),
+    CONSTRAINT fk_cliente_deposito FOREIGN KEY (cliente_id) REFERENCES clientes (id_cliente)
 )
 
+GO
 
- 
+-- Tabla hojas_rutas
+CREATE TABLE hojas_rutas (
+    id_hoja_ruta INT IDENTITY(1,1),
+    fecha DATE NOT NULL,
+    transporte_id INT NOT NULL,
+    observaciones VARCHAR(255) NULL,
+    fecha_salida DATETIME NULL,
+    fecha_regreso DATETIME NULL,
+    
+    CONSTRAINT pk_hoja_ruta PRIMARY KEY (id_hoja_ruta),
+    CONSTRAINT fk_transporte_hoja_ruta FOREIGN KEY (transporte_id) REFERENCES transportes (id_transporte)
+)
+
+GO
+
+-- Tabla Contactos
+CREATE TABLE Contactos (
+    id_contacto INT IDENTITY(1,1) NOT NULL,
+    contacto varchar(100) NOT NULL,
+    tipo_contacto_id int NOT NULL,
+    cliente_id int NULL,
+    CONSTRAINT pk_contacto PRIMARY KEY (id_contacto),
+    CONSTRAINT fk_tipo_cont FOREIGN KEY (tipo_contacto_id) REFERENCES Tipos_contactos (id_tipo_contacto),
+    CONSTRAINT fk_cliente_contacto FOREIGN KEY (cliente_id) REFERENCES Clientes (id_cliente)
+)
+
+GO
+
+-- Tabla productos
+CREATE TABLE productos (
+    id_producto int IDENTITY(1,1),
+    nombre varchar(50) NOT NULL,
+    descripcion varchar(100),
+    tipo_producto_id int NOT NULL,
+    marca_id int NOT NULL,
+    categoria_id int NOT NULL,
+    peso_kg decimal(18,2),
+	estado_id int NOT NULL
+    CONSTRAINT PK_producto PRIMARY KEY (id_producto),
+    CONSTRAINT FK_marca_producto FOREIGN KEY (marca_id) REFERENCES marcas (id_marca),
+    CONSTRAINT FK_tipo_producto FOREIGN KEY (tipo_producto_id) REFERENCES tipos_productos (id_tipo_producto),
+    CONSTRAINT FK_categoria_producto FOREIGN KEY (categoria_id) REFERENCES categorias (id_categoria),
+	CONSTRAINT FK_productos_estados_pedido FOREIGN KEY (estado_id) REFERENCES estados_pedido (id_estado_perdido)
+)
+
+GO
+
+-- Tabla inventarios
+CREATE TABLE inventarios (
+    id_inventario int,
+    sucursal_id int NOT NULL,
+    producto_id int NOT NULL,
+    cantidad int NOT NULL,
+    CONSTRAINT pk_inventario PRIMARY KEY (id_inventario),
+    CONSTRAINT fk_sucursal_inventario FOREIGN KEY (sucursal_id) REFERENCES sucursales (id_sucursal),
+    CONSTRAINT FK_producto_inventario FOREIGN KEY (producto_id) REFERENCES productos (id_producto)
+)
+
+GO
+
+-- Tabla empleados
+CREATE TABLE empleados (
+    id_empleado INT,
+    sucursal_id INT NOT NULL,
+    cargo_id INT NOT NULL,
+    nombre_completo VARCHAR(90) NOT NULL,
+    direccion VARCHAR(50) NOT NULL,
+    supervisor_id INT NULL,
+    barrio_id INT NULL,
+    CONSTRAINT pk_id_empleado PRIMARY KEY (id_empleado),
+    CONSTRAINT FK_empleados_supervisor FOREIGN KEY (supervisor_id) REFERENCES empleados (id_empleado),
+    CONSTRAINT fk_sucursal_empleados FOREIGN KEY (sucursal_id) REFERENCES sucursales (id_sucursal),
+    CONSTRAINT fk_cargo_empleados FOREIGN KEY (cargo_id) REFERENCES cargos (id_cargo),
+    CONSTRAINT FK_empleados_barrios FOREIGN KEY (barrio_id) REFERENCES barrios (id_barrio)
+)
+
+GO
+
+-- Tabla contactos_empleados
+CREATE TABLE contactos_empleados (
+    id_contacto_empleado INT NOT NULL,
+    contacto varchar(50) NOT NULL,
+    tipo_contacto_id int NULL,
+    empleado_id int NULL,
+    CONSTRAINT PK_contactos_empleados PRIMARY KEY (id_contacto_empleado),
+    CONSTRAINT FK_contactos_empleados_empleados FOREIGN KEY (empleado_id) REFERENCES empleados (id_empleado),
+    CONSTRAINT FK_contactos_empleados_Tipos_Contactos FOREIGN KEY (tipo_contacto_id) REFERENCES Tipos_Contactos (id_tipo_contacto)
+)
+
+GO
+
+-- Tabla pedidos
+CREATE TABLE pedidos (
+    id_pedido INT,
+    empleado_armado_id INT NOT NULL,
+    fecha DATE NOT NULL,
+    canal_compra_id INT NOT NULL,
+	estado_id int,
+	direccion_entrega_id int NOT NULL
+
+    CONSTRAINT pk_pedido PRIMARY KEY (id_pedido),   
+	CONSTRAINT fk_direccion_entrega_pedido FOREIGN KEY (direccion_entrega_id) REFERENCES direcciones_entregas (id_dir_entrega),
+    CONSTRAINT fk_empleado_armado_pedidos FOREIGN KEY (empleado_armado_id) REFERENCES empleados (id_empleado),
+    CONSTRAINT fk_canal_compra_pedidos FOREIGN KEY (canal_compra_id) REFERENCES canales_compras (id_canal_compra),
+	CONSTRAINT fk_estado_pedido FOREIGN KEY (estado_id) REFERENCES estados_pedido (id_estado_perdido)
+)
+
+GO
+
+-- Tabla Facturas
+CREATE TABLE Facturas (
+    id_factura int NOT NULL,
+    pedido_id int NOT NULL,
+    sucursal_id int NOT NULL,
+    empleado_factura_id int NOT NULL,
+    transporte_id int NULL,   
+    fecha date NOT NULL,
+    subtotal decimal(10,2) NOT NULL,
+	distancia_km DECIMAL(10,2)
+
+
+    CONSTRAINT pk_id_factura PRIMARY KEY (id_factura),
+    CONSTRAINT fk_pedido_id FOREIGN KEY (pedido_id) REFERENCES pedidos (id_pedido),
+    CONSTRAINT fk_sucursal_id FOREIGN KEY (sucursal_id) REFERENCES sucursales (id_sucursal),
+    CONSTRAINT fk_empleado_factura_id FOREIGN KEY (empleado_factura_id) REFERENCES empleados (id_empleado),
+    CONSTRAINT fk_transporte_factura FOREIGN KEY (transporte_id) REFERENCES transportes (id_transporte)
+)
+
+GO
+
+-- Tabla Facturas_medios_pago
+CREATE TABLE Facturas_medios_pago (
+    id_factura_medio_pago int,
+    monto decimal(10,2) NOT NULL,
+    medio_pago_id int NOT NULL,
+    factura_id int NULL,
+    CONSTRAINT pk_factura_medio_pago PRIMARY KEY (id_factura_medio_pago),
+    CONSTRAINT fk_factura_id FOREIGN KEY (factura_id) REFERENCES facturas (id_factura),
+    CONSTRAINT fk_medio_pago_id FOREIGN KEY (medio_pago_id) REFERENCES medios_pagos (id_medio_pago)
+)
+
+GO
+
+-- Tabla detalles_facturas
+CREATE TABLE detalles_facturas (
+    id_det_fact int,
+    factura_id int NOT NULL,
+    producto_id int NOT NULL,
+    cantidad int NOT NULL,
+    prec_uni decimal(10,2) NOT NULL,
+    peso_total_kg decimal(15,2) NULL,
+    CONSTRAINT pk_det_factura PRIMARY KEY (id_det_fact),
+    CONSTRAINT fk_factura_det_fac FOREIGN KEY (factura_id) REFERENCES facturas (id_factura),
+    CONSTRAINT fk_producto_det_fac FOREIGN KEY (producto_id) REFERENCES productos (id_producto)
+)
+
+GO
+
+-- Tabla detalle_pedidos
+CREATE TABLE detalle_pedidos (
+    id_det_pedido int,
+    producto_id int NOT NULL,
+    cantidad int NOT NULL,
+    prec_uni decimal(10,2) NOT NULL,
+    pedido_id int NOT NULL,
+    peso_total_kg decimal(15,2) NULL,
+    CONSTRAINT pk_det_pedido PRIMARY KEY (id_det_pedido),
+    CONSTRAINT fk_prod_det_ped FOREIGN KEY (producto_id) REFERENCES productos (id_producto),
+    CONSTRAINT fk_pedido_det_ped FOREIGN KEY (pedido_id) REFERENCES pedidos (id_pedido)
+)
+
+GO
+
+-- Tabla registro_inventario
+CREATE TABLE registro_inventario (
+    id_registro int NOT NULL,
+    producto_id int NOT NULL,
+    sucursal_id int NOT NULL,
+    tipo_movimiento_id int NOT NULL,
+    cantidad int NOT NULL,
+    motivo varchar(70) NULL,
+    fecha datetime NOT NULL,
+    sucursal_destino_id int NULL,
+    CONSTRAINT PK_registro_inventario PRIMARY KEY (id_registro),
+    CONSTRAINT fk_prod_registro FOREIGN KEY (producto_id) REFERENCES productos (id_producto),
+    CONSTRAINT fk_suc_registro FOREIGN KEY (sucursal_id) REFERENCES sucursales (id_sucursal),
+    CONSTRAINT fk_tipo_mov FOREIGN KEY (tipo_movimiento_id) REFERENCES tipos_movimientos (id_mov_tipo),
+    CONSTRAINT fk_suc_destino FOREIGN KEY (sucursal_destino_id) REFERENCES sucursales (id_sucursal)
+)
+
+GO
+
+-- Tabla detalles_hoja_ruta
+CREATE TABLE detalles_hoja_ruta (
+    id_detalle_hoja_ruta INT IDENTITY(1,1),
+    hoja_ruta_id INT NOT NULL,
+    pedido_id INT NOT NULL,
+    direccion_entrega_id INT NOT NULL,
+    orden_entrega INT NOT NULL,
+    hora_estimada_entrega TIME NULL,
+    hora_real_entrega TIME NULL,
+    observacion_entrega VARCHAR(255) NULL,
+    
+    CONSTRAINT pk_detalle_hoja_ruta PRIMARY KEY (id_detalle_hoja_ruta),
+    CONSTRAINT fk_hoja_ruta_detalle FOREIGN KEY (hoja_ruta_id) REFERENCES hojas_rutas (id_hoja_ruta),
+    CONSTRAINT fk_pedido_detalle_hoja FOREIGN KEY (pedido_id) REFERENCES pedidos (id_pedido),
+    CONSTRAINT fk_dir_entrega_detalle_hoja FOREIGN KEY (direccion_entrega_id) REFERENCES Direcciones_Entregas (id_dir_entrega)
+)
 
 
